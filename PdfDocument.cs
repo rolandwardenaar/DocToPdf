@@ -171,8 +171,7 @@ public class PdfDocument : IDocument
         {
             // Afbeelding uit DOCX
             imageData = _images[src];
-        }
-        else if (!string.IsNullOrEmpty(src))
+        }        else if (!string.IsNullOrEmpty(src))
         {
             // Lokale afbeelding uit HTML
             string imagePath = Path.Combine(_basePath, src);
@@ -180,7 +179,8 @@ public class PdfDocument : IDocument
             {
                 // Gebruik ImageConverter voor alle formaten
                 imageData = ImageConverter.ConvertToSupportedFormat(imagePath);
-            }        }
+            }
+        }
 
         if (imageData != null)
         {
