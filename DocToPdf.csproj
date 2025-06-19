@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
+<Project Sdk="Microsoft.NET.Sdk">  <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     
     <!-- NuGet Package Metadata -->
@@ -42,9 +42,17 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="LICENSE" Pack="true" PackagePath="\" />
   </ItemGroup>
+
+  <!-- Exclude showcase directory from compilation -->
+  <ItemGroup>
+    <Compile Remove="showcase/**/*" />
+    <Content Remove="showcase/**/*" />
+    <EmbeddedResource Remove="showcase/**/*" />
+    <None Remove="showcase/**/*" />
+  </ItemGroup>
+
 </Project>

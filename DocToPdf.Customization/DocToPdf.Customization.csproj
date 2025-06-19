@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    
+    <!-- NuGet Package Info -->
+    <PackageId>DocToPdf.Customization</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>DocToPdf Contributors</Authors>
+    <Description>Advanced PDF customization features for DocToPdf - watermarks, themes, headers/footers, and metadata</Description>
+    <PackageTags>pdf;customization;watermark;theme;header;footer</PackageTags>
+    <PackageProjectUrl>https://github.com/yourusername/DocToPdf</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/yourusername/DocToPdf</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    
+    <!-- Symbol packages -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DocToPdf.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="SkiaSharp" Version="3.119.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

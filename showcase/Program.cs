@@ -1,4 +1,5 @@
 using DocToPdf.Extensions;
+using DocToPdf.Customization.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,9 @@ builder.Services.AddSwaggerGen();
 
 // Add DocToPdf services with dependency injection
 builder.Services.AddDocToPdf();
+
+// Add DocToPdf Customization services
+builder.Services.AddDocToPdfCustomization();
 
 // Configure CORS for the frontend
 builder.Services.AddCors(options =>

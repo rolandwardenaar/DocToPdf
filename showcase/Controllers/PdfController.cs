@@ -1,4 +1,6 @@
 using DocToPdf.Services;
+using DocToPdf.Customization.Services;
+using DocToPdf.Customization.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace showcase.Controllers;
@@ -8,11 +10,16 @@ namespace showcase.Controllers;
 public class PdfController : ControllerBase
 {
     private readonly IDocumentToPdfService _pdfService;
+    private readonly IPdfCustomizationService _customizationService;
     private readonly ILogger<PdfController> _logger;
 
-    public PdfController(IDocumentToPdfService pdfService, ILogger<PdfController> logger)
+    public PdfController(
+        IDocumentToPdfService pdfService,
+        IPdfCustomizationService customizationService,
+        ILogger<PdfController> logger)
     {
         _pdfService = pdfService;
+        _customizationService = customizationService;
         _logger = logger;
     }
 
@@ -229,8 +236,182 @@ This demonstrates how easy it is to convert plain text to PDF using the DocToPdf
             }
         });
     }
+
+    [HttpPost("convert/markdown-with-watermark")]
+    public async Task<IActionResult> ConvertMarkdownWithWatermark([FromBody] ConvertMarkdownWithWatermarkRequest request)
+    {
+        try
+        {
+            _logger.LogInformation("Converting Markdown to PDF with watermark: {WatermarkText}", request.WatermarkText);            // First convert to PDF
+            var pdfBytes = await _pdfService.ConvertMarkdownToPdfAsync(
+                request.MarkdownContent, 
+                request.Title ?? "Generated PDF",
+                null  // basePath
+            );
+            
+            // Apply watermark
+            var watermarkOptions = new WatermarkOptions
+            {
+                Text = request.WatermarkText ?? "DRAFT",
+                Opacity = request.Opacity ?? 0.3f,
+                Position = request.Position ?? WatermarkPosition.Center,
+                Rotation = request.Rotation ?? 45f,
+                FontSize = request.FontSize ?? 48f,
+                Color = request.Color ?? "#CCCCCC"
+            };
+            
+            var customizedPdf = await _customizationService.AddWatermarkAsync(pdfBytes, watermarkOptions);
+            
+            var fileName = $"{request.Title?.Replace(" ", "_") ?? "document"}_watermarked.pdf";
+            return File(customizedPdf, "application/pdf", fileName);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error converting Markdown to PDF with watermark");
+            return BadRequest($"Error: {ex.Message}");
+        }
+    }
+
+    [HttpPost("convert/html-with-customization")]
+    public async Task<IActionResult> ConvertHtmlWithCustomization([FromBody] ConvertHtmlWithCustomizationRequest request)
+    {
+        try
+        {
+            _logger.LogInformation("Converting HTML to PDF with full customization");            // First convert to PDF
+            var pdfBytes = await _pdfService.ConvertHtmlToPdfAsync(
+                request.HtmlContent, 
+                request.Title ?? "Generated PDF",
+                null  // basePath
+            );
+            
+            // Build customization options
+            var customizationOptions = new PdfCustomizationOptions();
+            
+            if (!string.IsNullOrWhiteSpace(request.WatermarkText))
+            {
+                customizationOptions.Watermark = new WatermarkOptions
+                {
+                    Text = request.WatermarkText,
+                    Opacity = request.WatermarkOpacity ?? 0.3f,
+                    Position = request.WatermarkPosition ?? WatermarkPosition.Center,
+                    Rotation = 45f
+                };
+            }
+            
+            if (!string.IsNullOrWhiteSpace(request.HeaderTemplate))
+            {
+                customizationOptions.Header = new HeaderFooterOptions
+                {
+                    Template = request.HeaderTemplate,
+                    Alignment = HorizontalAlignment.Center,
+                    FontSize = 10f
+                };
+            }
+            
+            if (!string.IsNullOrWhiteSpace(request.FooterTemplate))
+            {
+                customizationOptions.Footer = new HeaderFooterOptions
+                {
+                    Template = request.FooterTemplate,
+                    Alignment = HorizontalAlignment.Center,
+                    FontSize = 10f
+                };
+            }
+            
+            if (request.Metadata != null)
+            {
+                customizationOptions.Metadata = new PdfMetadata
+                {
+                    Title = request.Metadata.Title,
+                    Author = request.Metadata.Author,
+                    Subject = request.Metadata.Subject,
+                    Keywords = request.Metadata.Keywords,
+                    CreationDate = DateTime.UtcNow
+                };
+            }
+            
+            // Apply all customizations
+            var customizedPdf = await _customizationService.ApplyCustomizationAsync(pdfBytes, customizationOptions);
+            
+            var fileName = $"{request.Title?.Replace(" ", "_") ?? "document"}_customized.pdf";
+            return File(customizedPdf, "application/pdf", fileName);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error converting HTML to PDF with customization");
+            return BadRequest($"Error: {ex.Message}");
+        }
+    }
+
+    [HttpPost("add-watermark")]
+    public async Task<IActionResult> AddWatermarkToExistingPdf(IFormFile pdfFile, [FromForm] AddWatermarkRequest request)
+    {
+        try
+        {
+            if (pdfFile == null || pdfFile.Length == 0)
+                return BadRequest("No PDF file provided");
+
+            _logger.LogInformation("Adding watermark to existing PDF: {FileName}", pdfFile.FileName);
+            
+            // Read the uploaded PDF
+            using var memoryStream = new MemoryStream();
+            await pdfFile.CopyToAsync(memoryStream);
+            var pdfBytes = memoryStream.ToArray();
+            
+            // Apply watermark
+            var watermarkOptions = new WatermarkOptions
+            {
+                Text = request.WatermarkText ?? "CONFIDENTIAL",
+                Opacity = request.Opacity ?? 0.3f,
+                Position = request.Position ?? WatermarkPosition.Center,
+                Rotation = request.Rotation ?? 45f,
+                FontSize = request.FontSize ?? 48f,
+                Color = request.Color ?? "#CCCCCC"
+            };
+            
+            var watermarkedPdf = await _customizationService.AddWatermarkAsync(pdfBytes, watermarkOptions);
+            
+            var fileName = Path.GetFileNameWithoutExtension(pdfFile.FileName) + "_watermarked.pdf";
+            return File(watermarkedPdf, "application/pdf", fileName);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error adding watermark to PDF");
+            return BadRequest($"Error: {ex.Message}");
+        }
+    }
 }
 
 public record ConvertHtmlRequest(string HtmlContent, string? Title = null);
 public record ConvertMarkdownRequest(string MarkdownContent, string? Title = null);
 public record ConvertTextRequest(string TextContent, string? Title = null);
+public record ConvertMarkdownWithWatermarkRequest(
+    string MarkdownContent, 
+    string? Title = null,
+    string? WatermarkText = null,
+    float? Opacity = null,
+    WatermarkPosition? Position = null,
+    float? Rotation = null,
+    float? FontSize = null,
+    string? Color = null);
+public record ConvertHtmlWithCustomizationRequest(
+    string HtmlContent,
+    string? Title = null,
+    string? WatermarkText = null,
+    float? WatermarkOpacity = null,
+    WatermarkPosition? WatermarkPosition = null,
+    string? HeaderTemplate = null,
+    string? FooterTemplate = null,
+    PdfMetadataRequest? Metadata = null);
+public record PdfMetadataRequest(
+    string? Title = null,
+    string? Author = null,
+    string? Subject = null,
+    string? Keywords = null);
+public record AddWatermarkRequest(
+    string? WatermarkText = null,
+    float? Opacity = null,
+    WatermarkPosition? Position = null,
+    float? Rotation = null,
+    float? FontSize = null,
+    string? Color = null);
