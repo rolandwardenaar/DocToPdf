@@ -1,0 +1,105 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build Release
+      run: dotnet build --configuration Release --no-restore
+      
+    - name: Test
+      run: dotnet test --configuration Release --no-build
+      
+    - name: Publish Windows
+      run: dotnet publish --configuration Release --runtime win-x64 --self-contained true --output ./publish/win-x64
+      
+    - name: Publish Linux
+      run: dotnet publish --configuration Release --runtime linux-x64 --self-contained true --output ./publish/linux-x64
+      
+    - name: Publish macOS
+      run: dotnet publish --configuration Release --runtime osx-x64 --self-contained true --output ./publish/osx-x64
+      
+    - name: Create Release Archives
+      run: |
+        cd publish
+        tar -czf ../DocToPdf-linux-x64.tar.gz linux-x64/
+        tar -czf ../DocToPdf-osx-x64.tar.gz osx-x64/
+        cd ../
+        cd publish/win-x64
+        zip -r ../../DocToPdf-win-x64.zip .
+        cd ../../
+        
+    - name: Create Release
+      uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+        body: |
+          ## Changes in this Release
+          
+          Please see the [CHANGELOG.md](CHANGELOG.md) for detailed changes.
+          
+          ## Downloads
+          
+          - **Windows**: DocToPdf-win-x64.zip
+          - **Linux**: DocToPdf-linux-x64.tar.gz  
+          - **macOS**: DocToPdf-osx-x64.tar.gz
+          
+          ## Installation
+          
+          1. Download the appropriate package for your platform
+          2. Extract the archive
+          3. Run the executable from command line
+          
+          For detailed usage instructions, see the [README.md](README.md).
+        
+    - name: Upload Windows Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./DocToPdf-win-x64.zip
+        asset_name: DocToPdf-win-x64.zip
+        asset_content_type: application/zip
+        
+    - name: Upload Linux Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./DocToPdf-linux-x64.tar.gz
+        asset_name: DocToPdf-linux-x64.tar.gz
+        asset_content_type: application/gzip
+        
+    - name: Upload macOS Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./DocToPdf-osx-x64.tar.gz
+        asset_name: DocToPdf-osx-x64.tar.gz
+        asset_content_type: application/gzip

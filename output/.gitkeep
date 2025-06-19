@@ -1,0 +1,2 @@
+# Deze file zorgt ervoor dat de output directory wordt bijgehouden in git
+# PDF bestanden worden genegeerd door .gitignore maar de directory structuur blijft behouden
