@@ -180,17 +180,22 @@ public class PdfDocument : IDocument
             {
                 // Gebruik ImageConverter voor alle formaten
                 imageData = ImageConverter.ConvertToSupportedFormat(imagePath);
-            }
-        }        if (imageData != null)
+            }        }
+
+        if (imageData != null)
         {
             try
             {
                 column.Item().Image(imageData).FitWidth();
-            }            catch (Exception ex)            {
+            }
+            catch (Exception ex)
+            {
                 Console.WriteLine($"Waarschuwing: Kan afbeelding niet toevoegen aan PDF - {ex.Message}");
             }
         }
-    }    /// <summary>
+    }
+
+    /// <summary>
     /// Genereer PDF bestand naar het opgegeven pad
     /// </summary>
     /// <param name="outputPath">Pad waar het PDF bestand opgeslagen moet worden</param>
