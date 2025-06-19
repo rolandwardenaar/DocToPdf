@@ -193,14 +193,21 @@ public class PdfDocument : IDocument
                 Console.WriteLine($"Waarschuwing: Kan afbeelding niet toevoegen aan PDF - {ex.Message}");
             }
         }
-    }
-
-    /// <summary>
+    }    /// <summary>
     /// Genereer PDF bestand naar het opgegeven pad
     /// </summary>
     /// <param name="outputPath">Pad waar het PDF bestand opgeslagen moet worden</param>
     public void GeneratePdf(string outputPath)
     {
         Document.Create(container => this.Compose(container)).GeneratePdf(outputPath);
+    }
+
+    /// <summary>
+    /// Genereer PDF als byte array
+    /// </summary>
+    /// <returns>PDF inhoud als byte array</returns>
+    public byte[] GeneratePdf()
+    {
+        return Document.Create(container => this.Compose(container)).GeneratePdf();
     }
 }
