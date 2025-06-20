@@ -2,9 +2,9 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using HtmlAgilityPack;
-using DocToPdf.Converters;
+using DocToPdf.Core.Converters;
 
-namespace DocToPdf.Models;
+namespace DocToPdf.Core.Models;
 
 public class PdfDocument : IDocument
 {

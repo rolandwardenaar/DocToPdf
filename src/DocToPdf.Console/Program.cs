@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using QuestPDF.Infrastructure;
-using DocToPdf.Converters;
-using DocToPdf.Models;
+using DocToPdf.Core.Converters;
+using DocToPdf.Core.Models;
 
-namespace DocToPdf
+namespace DocToPdf.ConsoleApp
 {
     public class Program
     {
@@ -27,7 +27,8 @@ namespace DocToPdf
                 {
                     // Geen parameters: converteer alle ondersteunde bestanden in de input directory
                     await ConvertAllSupportedFilesInDirectory();
-                }                else if (args.Length == 1)
+                }
+                else if (args.Length == 1)
                 {
                     // Enkele parameter: converteer het specifieke bestand uit input directory
                     var inputDir = Path.Combine(Directory.GetCurrentDirectory(), "input");

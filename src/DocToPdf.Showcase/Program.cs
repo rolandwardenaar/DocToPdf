@@ -1,4 +1,4 @@
-using DocToPdf.Extensions;
+using DocToPdf.Core.Extensions;
 using DocToPdf.Customization.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);

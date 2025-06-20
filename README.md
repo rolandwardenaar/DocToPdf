@@ -2,6 +2,24 @@
 
 Een moderne .NET library en console applicatie voor het converteren van documenten (Markdown, HTML, DOCX, Text) naar PDF bestanden met ondersteuning voor Mermaid diagrammen en afbeeldingen. Inclusief dependency injection ondersteuning voor eenvoudige integratie in ASP.NET Core en andere .NET applicaties.
 
+## 🏗️ Project Structuur
+
+```
+DocToPdf/
+├── src/
+│   ├── DocToPdf.Core/              # Core library met alle functionaliteit
+│   ├── DocToPdf.Console/           # Console applicatie
+│   ├── DocToPdf.Customization/     # PDF customization extensies
+│   └── DocToPdf.Showcase/          # Web API showcase/demo
+├── .scripts/                       # PowerShell helper scripts
+├── .doc/                          # Project documentatie en voortgangsrapporten
+├── test/                          # Test bestanden en voorbeelden
+├── input/                         # Input bestanden voor console app
+├── output/                        # Gegenereerde PDF bestanden
+├── DocToPdf.sln                   # Solution file
+└── README.md
+```
+
 ## Features
 
 ✅ **Document Conversie**
@@ -39,15 +57,15 @@ Een moderne .NET library en console applicatie voor het converteren van document
 ### Als NuGet Package
 
 ```bash
-dotnet add package DocToPdf
+dotnet add package DocToPdf.Core
 ```
 
-### Via Git Clone (voor console app)
+### Console App Builden
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/DocToPdf.git
 cd DocToPdf
-dotnet restore
+dotnet build
 dotnet build
 ```
 
@@ -58,7 +76,7 @@ dotnet build
 #### ASP.NET Core
 
 ```csharp
-using DocToPdf.Extensions;
+using DocToPdf.Core.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +89,8 @@ var app = builder.Build();
 #### Controller Usage
 
 ```csharp
+using DocToPdf.Core.Services;
+
 [ApiController]
 [Route("api/[controller]")]
 public class PdfController : ControllerBase
@@ -109,8 +129,8 @@ public class PdfController : ControllerBase
 #### Console App met DI
 
 ```csharp
-using DocToPdf.Extensions;
-using DocToPdf.Services;
+using DocToPdf.Core.Extensions;
+using DocToPdf.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -133,6 +153,13 @@ await pdfService.ConvertMarkdownToPdfAsync(markdownContent, "markdown.pdf", "My 
 ### 📱 Console Application Usage
 
 ```bash
+# Run via solution
+dotnet run --project src/DocToPdf.Console/DocToPdf.Console.csproj [filename]
+
+# Build and run executable
+dotnet build
+cd src/DocToPdf.Console/bin/Debug/net8.0
+./DocToPdf.exe [filename]
 # Converteer één specifiek bestand
 dotnet run -- document.md
 
@@ -144,12 +171,29 @@ dotnet run
 
 ```
 DocToPdf/
-├── input/          # Plaats hier je bron documenten
-├── output/         # Gegenereerde PDF bestanden
-├── .scripts/       # Helper scripts
-│   ├── test.ps1    # Test script
-│   ├── clean.ps1   # Project cleanup
-│   └── run.ps1     # Build en run script
+├── src/                           # Source code projecten
+│   ├── DocToPdf.Core/            # Core library
+│   ├── DocToPdf.Console/         # Console applicatie
+│   ├── DocToPdf.Customization/   # PDF customization extensies
+│   └── DocToPdf.Showcase/        # Web API showcase/demo
+├── .scripts/                     # PowerShell helper scripts
+│   ├── test.ps1                  # Test script
+│   ├── clean.ps1                 # Project cleanup
+│   ├── run.ps1                   # Build en run script
+│   ├── create-image.ps1          # Image generation tests
+│   ├── create-gif.ps1            # GIF generation tests
+│   └── create-docx.ps1           # DOCX generation tests
+├── .doc/                         # Project documentatie
+│   ├── LIBRARY_EXAMPLES.md       # Uitgebreide library voorbeelden
+│   ├── TECHNICAL_SPECIFICATIONS.md # Technische specificaties
+│   └── ...                       # Voortgangsrapporten en documentatie
+├── test/                         # Test bestanden en voorbeelden
+│   ├── test.md                   # Markdown test bestand
+│   ├── test-document.html        # HTML test bestand
+│   ├── test-mermaid.md           # Mermaid diagram test
+│   └── ...                       # Andere test bestanden
+├── input/                        # Input bestanden voor console app
+├── output/                       # Gegenereerde PDF bestanden
 └── ...
 ```
 

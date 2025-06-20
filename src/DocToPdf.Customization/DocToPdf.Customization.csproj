@@ -20,9 +20,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DocToPdf.csproj" />
+  </PropertyGroup>  <ItemGroup>
+    <ProjectReference Include="..\DocToPdf.Core\DocToPdf.Core.csproj" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageReference Include="SkiaSharp" Version="3.119.0" />

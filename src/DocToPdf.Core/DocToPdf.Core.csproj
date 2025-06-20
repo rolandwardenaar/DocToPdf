@@ -1,4 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">  <PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -6,12 +8,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     
     <!-- NuGet Package Metadata -->
-    <PackageId>DocToPdf</PackageId>
+    <PackageId>DocToPdf.Core</PackageId>
     <PackageVersion>1.1.0</PackageVersion>
     <Authors>DocToPdf Contributors</Authors>
     <Company>DocToPdf</Company>
-    <Product>DocToPdf</Product>
-    <Description>Professional .NET library for converting documents (Markdown, HTML, DOCX) to PDF with Mermaid diagram support. Includes dependency injection extensions for easy integration in ASP.NET Core and other .NET applications.</Description>
+    <Product>DocToPdf Core Library</Product>
+    <Description>Core library for converting documents (Markdown, HTML, DOCX) to PDF with Mermaid diagram support. Includes dependency injection extensions for easy integration in ASP.NET Core and other .NET applications.</Description>
     <PackageProjectUrl>https://github.com/YOUR_USERNAME/DocToPdf</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -21,12 +23,9 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    
-    <!-- Console App Support -->
-    <OutputType>Exe</OutputType>
-    <AssemblyName>DocToPdf</AssemblyName>
-    <RootNamespace>DocToPdf</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
     <PackageReference Include="Mammoth" Version="1.8.0" />
@@ -36,23 +35,16 @@
     <PackageReference Include="SkiaSharp" Version="3.119.0" />
     <PackageReference Include="Svg.Skia" Version="3.0.3" />
     <PackageReference Include="PuppeteerSharp" Version="20.1.3" />
-      <!-- Dependency Injection Support -->
+    <!-- Dependency Injection Support -->
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-    <None Include="LICENSE" Pack="true" PackagePath="\" />
-  </ItemGroup>
 
-  <!-- Exclude showcase directory from compilation -->
   <ItemGroup>
-    <Compile Remove="showcase/**/*" />
-    <Content Remove="showcase/**/*" />
-    <EmbeddedResource Remove="showcase/**/*" />
-    <None Remove="showcase/**/*" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

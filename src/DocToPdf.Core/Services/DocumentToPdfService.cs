@@ -1,10 +1,10 @@
-using DocToPdf.Converters;
-using DocToPdf.Models;
+using DocToPdf.Core.Converters;
+using DocToPdf.Core.Models;
 using Microsoft.Extensions.Logging;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
-namespace DocToPdf.Services;
+namespace DocToPdf.Core.Services;
 
 /// <summary>
 /// Service implementation for converting documents to PDF

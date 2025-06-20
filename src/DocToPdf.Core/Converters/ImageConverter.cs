@@ -1,7 +1,7 @@
 using SkiaSharp;
 using Svg.Skia;
 
-namespace DocToPdf.Converters;
+namespace DocToPdf.Core.Converters;
 
 public static class ImageConverter
 {

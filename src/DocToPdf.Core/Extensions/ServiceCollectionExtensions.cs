@@ -1,8 +1,8 @@
-using DocToPdf.Services;
+using DocToPdf.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace DocToPdf.Extensions;
+namespace DocToPdf.Core.Extensions;
 
 /// <summary>
 /// Extension methods for configuring DocToPdf services in dependency injection container

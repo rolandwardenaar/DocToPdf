@@ -1,6 +1,6 @@
-using DocToPdf.Models;
+using DocToPdf.Core.Models;
 
-namespace DocToPdf.Services;
+namespace DocToPdf.Core.Services;
 
 /// <summary>
 /// Service interface for converting documents to PDF

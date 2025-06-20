@@ -78,6 +78,9 @@ When developing DocToPdf extension packages:
 
 ## 🔧 Code Standards
 
+### new projects
+Use always dotnet new <template> -n <ProjectName> -f net8.0
+
 ### API Design
 - **Async Methods**: Always end with `Async` and return `Task<T>`
 - **Cancellation**: Include `CancellationToken cancellationToken = default` parameter
